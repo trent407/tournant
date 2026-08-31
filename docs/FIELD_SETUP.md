@@ -18,22 +18,25 @@ the order below.
 - Optionally, a USB Bluetooth adapter as a spare/backup if the Pi's
   onboard adapter turns out to be flaky with 4 simultaneous connections.
 
-## 1. Identify the printer's real identity
+## 1. Identify the printer's real identity -- CONFIRMED
 
-The printer is a confirmed **Epson TM-m30II** (per its label: model
-TM-m30II, Seiko Epson Corp). It prints a **self-test page** when you hold
-the feed button while powering on -- see Epson's [TM-m30II Technical
-Reference Guide](https://files.support.epson.com/pdf/pos/bulk/tm-m30ii_trg_en_reva.pdf)
-if the exact button combo isn't obvious. The self-test page typically
-lists:
+The printer is an **Epson TM-m30II** (serial X855023961). Read off the
+config sheet (self-test page: hold Feed while powering on):
 
-- the Bluetooth device name and MAC address it advertises, and
-- its Ethernet IP address (or "DHCP" -- in which case check your
-  router's client list, or your POS's printer configuration screen,
-  which already has to know this IP to print to it today).
-
-Write both down. You'll need the Bluetooth name for pairing and the IP
-for `config/config.yaml`'s `printer.host`.
+- **Bluetooth device name:** `TM-m30II_023961`
+- **BD_ADDR (Bluetooth MAC):** `00:01:90:61:42:64`
+- **Passkey:** `0000`, **Security: Low** -- effectively no real pairing
+  authentication. The Pi's Bluetooth agent should auto-accept pairing
+  (see step 4) rather than prompt for confirmation, matching this.
+- **Mode: Auto re-connect enable** -- the printer actively tries to
+  reclaim connections from devices it's previously paired with. Power it
+  off or move it out of range during the Pi's first pairing test (step
+  4) so it can't race the Pi for a tablet's connection.
+- **Ethernet MAC:** `38-1A-52-9B-56-73` -- worth pinning to a DHCP
+  reservation for `192.168.1.50` on the router so the IP never drifts.
+- The self-test sheet's own Ethernet IP field showed "(None)" -- that's
+  the static-config field, not the live DHCP lease; the confirmed
+  working IP is `192.168.1.50` (already set in `config/config.yaml`).
 
 ## 2. Confirm the printer's raw/9100 port works
 
@@ -67,15 +70,19 @@ four at once.
 
 1. On the tablet you're onboarding (start with whichever platform is
    least busy right now), open its printer/Bluetooth settings and
-   **forget/unpair the real printer**. Leave the real printer's own
-   Bluetooth radio powered off or out of range for this step if
-   possible, so the tablet can't accidentally re-find it mid-setup.
+   **forget/unpair the real printer**. Power the real printer's
+   Bluetooth off or move it out of range for this step -- it's set to
+   "Auto re-connect enable" (step 1), so leaving it live risks it
+   racing the Pi to reclaim the tablet's connection.
 2. On the Pi:
    ```
-   ./scripts/setup_bluetooth.sh "<printer's Bluetooth name from step 1>" 1
+   ./scripts/setup_bluetooth.sh "TM-m30II_023961" 1
    ```
    (use channel `1` for the first tablet, `2` for the second, etc. --
-   matches `config/config.yaml`'s `sources[].channel`)
+   matches `config/config.yaml`'s `sources[].channel`. The script also
+   sets the Pi's Bluetooth agent to auto-accept pairing, matching the
+   real printer's Security: Low / passkey 0000 -- no PIN prompt should
+   appear on either side.)
 3. On the tablet, scan for Bluetooth printers and pair with the name
    from step 1 -- it'll now find the Pi.
 4. Start Tournant on the Pi (see README's "Run it for real"), then

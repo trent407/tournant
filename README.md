@@ -87,10 +87,17 @@ docs/               ARCHITECTURE.md, FIELD_SETUP.md
   Plan is a small unmanaged switch at the printer end (printer + Pi both
   plug into it) rather than bridging through the Pi, so the POS's
   connection to the printer never depends on the Pi being powered on.
+- From the printer's self-test/config sheet: Bluetooth device name
+  `TM-m30II_023961`, BD_ADDR `00:01:90:61:42:64`, passkey `0000`,
+  security level Low, and "Auto re-connect enable" mode. Low security +
+  a fixed passkey means pairing has no real authentication -- the Pi's
+  Bluetooth agent should auto-accept pairing the same way rather than
+  prompting, and the real printer's auto-reconnect means it should be
+  powered off/out of range during the Pi's first pairing test so it
+  doesn't race to reclaim a tablet's connection.
 
 ## Still open (confirm on-site, see docs/FIELD_SETUP.md)
 
-- Printer's Bluetooth device name/MAC (needed for `setup_bluetooth.sh`).
 - Whether GrubHub/ChowNow tablets currently print via Bluetooth at all,
   or only display orders on-screen.
 - Whether one Bluetooth adapter reliably holds 4 simultaneous RFCOMM
