@@ -1,0 +1,15 @@
+[Unit]
+Description=Tournant kitchen order interceptor
+After=bluetooth.target network-online.target
+Wants=bluetooth.target network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/tournant
+ExecStart=/usr/bin/python3 -m tournant.cli --config /home/pi/tournant/config/config.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

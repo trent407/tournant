@@ -1,0 +1,40 @@
+# Copy this to config/config.yaml (gitignored -- it'll contain your real
+# printer IP) and adjust for your site.
+
+printer:
+  host: 192.168.1.50   # the Star printer's Ethernet IP (see docs/FIELD_SETUP.md)
+  port: 9100            # raw/JetDirect port -- standard on Star printers
+
+dashboard:
+  host: 0.0.0.0
+  port: 8080
+
+# One entry per tablet. mode: bluetooth is real hardware (Pi in the
+# kitchen); mode: tcp is for local testing with sim/mock_tablet.py -- see
+# the "Try it tonight" section of README.md.
+sources:
+  - name: ubereats
+    mode: bluetooth
+    channel: 1
+  - name: doordash
+    mode: bluetooth
+    channel: 2
+  - name: grubhub
+    mode: bluetooth
+    channel: 3
+  - name: chownow
+    mode: bluetooth
+    channel: 4
+
+# Local/simulator equivalent of the block above -- uncomment and comment
+# out the bluetooth block to test without hardware:
+#
+# sources:
+#   - name: ubereats
+#     mode: tcp
+#     host: 127.0.0.1
+#     port: 19001
+#   - name: doordash
+#     mode: tcp
+#     host: 127.0.0.1
+#     port: 19002
