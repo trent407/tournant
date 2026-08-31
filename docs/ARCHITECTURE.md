@@ -3,7 +3,7 @@
 ## What this is
 
 Tournant sits between the delivery-platform tablets and the kitchen's
-Star Micronics printer. Instead of each tablet's Bluetooth print driver
+Epson TM-m30II printer. Instead of each tablet's Bluetooth print driver
 talking directly to the printer, it talks to a Raspberry Pi impersonating
 the printer over Bluetooth Classic SPP (Serial Port Profile). The Pi:
 
@@ -22,15 +22,26 @@ completely unparseable job still prints fine.
 
 ## Why Bluetooth impersonation works here
 
-Star's Bluetooth-capable printers (e.g. TSP100III BT/LAN, mC-Print
-series) expose themselves over Bluetooth Classic as a plain SPP RFCOMM
-endpoint. The tablet's print driver just streams raw ESC/POS bytes down
-that serial pipe -- there's no authentication or cryptographic binding
-tying a pairing to a specific physical printer. Whatever device the
-tablet is paired with under the expected name/MAC receives the job. That
-means a device that presents the same SPP service (right device name
-during pairing, then remembered by MAC afterward) is indistinguishable
-to the tablet from the real printer.
+Epson's Bluetooth-capable TM-series printers (this kitchen's is a
+TM-m30II) expose themselves over Bluetooth Classic as a plain SPP RFCOMM
+endpoint -- the same interface Epson's own documentation confirms only
+holds **one connected device at a time**, which is exactly the "DoorDash
+and Uber Eats fight for control" symptom observed on-site. The tablet's
+print driver just streams raw ESC/POS bytes down that serial pipe --
+there's no authentication or cryptographic binding tying a pairing to a
+specific physical printer (Bluetooth security is set to Epson's default
+"Middle" level, which doesn't change this). Whatever device the tablet is
+paired with under the expected name/MAC receives the job. That means a
+device that presents the same SPP service (right device name during
+pairing, then remembered by MAC afterward) is indistinguishable to the
+tablet from the real printer -- and unlike the real printer's firmware,
+the Pi *can* hold several such connections at once, which is what
+actually fixes the contention rather than just relocating it.
+
+Epson's TM printers also confirm raw ESC/POS over TCP port 9100 as a
+standard interface (in addition to their ePOS-Print XML/HTTP mode, which
+Tournant doesn't use), matching what `printer_forward.py` already does
+and what the on-site `nc -zv <printer-ip> 9100` test confirmed reachable.
 
 ## Component map
 

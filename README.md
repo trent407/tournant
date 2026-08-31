@@ -3,7 +3,7 @@
 A Raspberry Pi 4 that sits in the kitchen impersonating the printer over
 Bluetooth SPP, so it can capture orders from multiple delivery-app tablets
 (Uber Eats, DoorDash, GrubHub, ChowNow) and re-forward each one, byte for
-byte, to the real Star Micronics printer over Ethernet -- while also
+byte, to the real Epson TM-m30II printer over Ethernet -- while also
 logging a best-effort readable copy of each order to a live dashboard.
 
 See `docs/ARCHITECTURE.md` for how and why this works, and
@@ -74,11 +74,25 @@ systemd/            tournant.service -- run on boot
 docs/               ARCHITECTURE.md, FIELD_SETUP.md
 ```
 
-## Known unknowns (confirm on-site, see docs/FIELD_SETUP.md)
+## Confirmed on-site so far
 
-- Exact printer model/name/MAC/IP.
-- Whether DoorDash/GrubHub/ChowNow tablets currently print via Bluetooth
-  at all, or only display orders on-screen.
+- Printer is an **Epson TM-m30II**, IP `192.168.1.50`, raw ESC/POS on TCP
+  port 9100 confirmed reachable from wifi (`nc -zv` succeeded).
+- Uber Eats and DoorDash both already print to this printer over
+  Bluetooth today, but only one at a time -- confirmed contention
+  matching Epson's documented "one connected device at a time" Bluetooth
+  behavior. This is exactly what Tournant's multi-connection listener
+  fixes (see docs/ARCHITECTURE.md).
+- Wiring: a single Ethernet run crosses the dining room to the printer.
+  Plan is a small unmanaged switch at the printer end (printer + Pi both
+  plug into it) rather than bridging through the Pi, so the POS's
+  connection to the printer never depends on the Pi being powered on.
+
+## Still open (confirm on-site, see docs/FIELD_SETUP.md)
+
+- Printer's Bluetooth device name/MAC (needed for `setup_bluetooth.sh`).
+- Whether GrubHub/ChowNow tablets currently print via Bluetooth at all,
+  or only display orders on-screen.
 - Whether one Bluetooth adapter reliably holds 4 simultaneous RFCOMM
   connections, or whether a second (USB) adapter is needed.
 - iOS (GrubHub iPad) Bluetooth SPP behavior may differ from Android and

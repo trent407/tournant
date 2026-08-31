@@ -20,11 +20,12 @@ the order below.
 
 ## 1. Identify the printer's real identity
 
-Most Star printers print a **self-test page** when you hold the feed
-button while powering on (exact combo varies by model -- check the
-printer's manual/label, or Star's support site for your exact model
-number, which is on a label on the underside/back). The self-test page
-typically lists:
+The printer is a confirmed **Epson TM-m30II** (per its label: model
+TM-m30II, Seiko Epson Corp). It prints a **self-test page** when you hold
+the feed button while powering on -- see Epson's [TM-m30II Technical
+Reference Guide](https://files.support.epson.com/pdf/pos/bulk/tm-m30ii_trg_en_reva.pdf)
+if the exact button combo isn't obvious. The self-test page typically
+lists:
 
 - the Bluetooth device name and MAC address it advertises, and
 - its Ethernet IP address (or "DHCP" -- in which case check your

@@ -1,4 +1,4 @@
-"""Stand-in for the real Star printer: listens on a TCP port the same way
+"""Stand-in for the real Epson TM-m30II printer: listens on a TCP port the same way
 the printer's raw/JetDirect interface does (port 9100), and just logs and
 saves whatever it receives. Point PrinterForwarder (via config.yaml's
 `printer.host`/`printer.port`) at this during local testing so you can

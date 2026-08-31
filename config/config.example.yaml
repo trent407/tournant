@@ -2,8 +2,8 @@
 # printer IP) and adjust for your site.
 
 printer:
-  host: 192.168.1.50   # the Star printer's Ethernet IP (see docs/FIELD_SETUP.md)
-  port: 9100            # raw/JetDirect port -- standard on Star printers
+  host: 192.168.1.50   # the printer's Ethernet IP -- confirmed Epson TM-m30II (see docs/FIELD_SETUP.md)
+  port: 9100            # raw/JetDirect port -- confirmed reachable via `nc -zv <ip> 9100`
 
 dashboard:
   host: 0.0.0.0

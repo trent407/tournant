@@ -10,7 +10,7 @@ from tournant.transport import TcpListener
 
 
 class _CapturingPrinterServer:
-    """Minimal TCP sink standing in for the real Star printer."""
+    """Minimal TCP sink standing in for the real Epson TM-m30II printer."""
 
     def __init__(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

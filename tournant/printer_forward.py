@@ -5,7 +5,7 @@ import socket
 
 class PrinterForwarder:
     """Sends a raw ESC/POS job to the real printer's Ethernet raw/JetDirect
-    interface (Star printers, like most receipt printers, accept a raw
+    interface (Epson TM printers, like most receipt printers, accept a raw
     byte stream on TCP port 9100 -- no protocol wrapping needed).
     """
 
